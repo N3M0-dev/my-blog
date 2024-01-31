@@ -4,9 +4,8 @@ import { blog } from "../lib/markdoc/frontmatter.schema";
 import PageLayout from "../layouts/PageLayout.astro";
 import PageMeta from "../components/PageMeta.astro";
 import { SITE_TITLE } from "../config";
-import type { ZodObject } from "zod";
+import { ZodUndefined, type ZodObject } from "zod";
 import type { RenderableTreeNode } from "@markdoc/markdoc";
-
 
 const posts = await readAll({
   directory: "blog",
@@ -20,14 +19,6 @@ const sortedPosts = posts
       new Date(b.frontmatter.date).valueOf() -
       new Date(a.frontmatter.date).valueOf()
   );
-
-function des(post: { slug: string; content: RenderableTreeNode; frontmatter: any; }){
-  if(post.frontmatter.external==false)
-    return post.frontmatter.description;
-  else{
-    return null;
-  }
-}
 ---
 
 <PageLayout>
@@ -44,8 +35,8 @@ function des(post: { slug: string; content: RenderableTreeNode; frontmatter: any
             day: "numeric",
           });
           return (
-            <li  class="grid grid-cols-[1fr] md:grid-cols-[1fr_auto] mb-3 md:gap-2 items-start">
-              <div id="move_title" class="title">
+            <li class="grid grid-cols-[1fr] md:grid-cols-[1fr_auto] mb-3 md:gap-2 items-start">
+              <div class="title">
                 {post.frontmatter.external ? (
                   <a
                     href={post.frontmatter.url}
@@ -71,7 +62,6 @@ function des(post: { slug: string; content: RenderableTreeNode; frontmatter: any
                         bg-[length:0%_55%] hover:bg-[length:100%_55%] dark:bg-[length:0%_2px] hover:dark:bg-[length:100%_2px]
                         from-primary-blue to-primary-blue dark:from-primary-blue dark:to-primary-blue
                       "
-                    id="test"
                   >
                     {post.frontmatter.title}
                   </a>
@@ -82,16 +72,26 @@ function des(post: { slug: string; content: RenderableTreeNode; frontmatter: any
                   {formattedDate}
                 </time>
               </div>
-                <p id="move_des" class="col-span-2 break-words line-clamp-2 hyphens-auto mb-4 description">
-                  {des(post)}
+
+              {typeof post.frontmatter.tags === "undefined" ? undefined : (
+                <p class="col-span-2 break-words line-clamp-2 hyphens-auto">
+                  <span class="fa fa-solid fa-tag text-text-muted" />
+                  {Object.keys(post.frontmatter.tags)
+                    .map((k) => {
+                      return post.frontmatter.tags[k];
+                    })
+                    .join(", ")}
                 </p>
+              )}
+              {post.frontmatter.external ? undefined : (
+                <p class="col-span-2 break-words line-clamp-2 hyphens-auto mb-4 description">
+                  {post.frontmatter.description}
+                </p>
+              )}
             </li>
-            
           );
         })
       }
     </ul>
   </section>
 </PageLayout>
-
-

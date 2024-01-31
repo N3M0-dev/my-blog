@@ -1,0 +1,64 @@
+---
+import { readAll } from "../lib/markdoc/read";
+import { blog } from "../lib/markdoc/frontmatter.schema";
+import PageLayout from "../layouts/PageLayout.astro";
+import PageMeta from "../components/PageMeta.astro";
+import { SITE_TITLE } from "../config";
+import { ZodUndefined, z, type ZodObject } from "zod";
+import type { RenderableTreeNode } from "@markdoc/markdoc";
+import type AboutTheTheme from "src/components/AboutTheTheme.astro";
+
+const posts = await readAll({
+  directory: "blog",
+  frontmatterSchema: blog,
+});
+
+const filteredPosts = posts
+  .filter((p) => p.frontmatter.draft !== true)
+  .filter(({ frontmatter }) => !frontmatter.external)
+  .filter(({ frontmatter }) => frontmatter.tags !== undefined);
+
+function des(post: {
+  slug: string;
+  content: RenderableTreeNode;
+  frontmatter: any;
+}) {
+  if (post.frontmatter.external == false) return post.frontmatter.description;
+  else {
+    return null;
+  }
+}
+
+var allPostTags: Array<string> = [];
+
+filteredPosts.map((post) => {
+  const posttags: Array<string> = post.frontmatter.tags;
+  // console.log(posttags);
+  allPostTags.push(...posttags);
+  // console.log(allPostTags)
+});
+
+function uniqueMask(value: any, index: number, array: Array<string>) {
+  return array.indexOf(value) === index;
+}
+
+const uniquePostTags = allPostTags.filter(uniqueMask);
+console.log(uniquePostTags);
+---
+
+<PageLayout>
+  <PageMeta title={`Blog | ${SITE_TITLE}`} slot="meta" />
+  <section slot="main">
+    <div class="flex justify-evenly">
+      {
+        uniquePostTags.map((tag) => {
+          return (
+            <div class="text-center flex-auto m-5 p-4 w-14 h-14 rounded-lg bg-blue-300 dark:bg-blue-800">
+              {tag}
+            </div>
+          );
+        })
+      }
+    </div>
+  </section>
+</PageLayout>

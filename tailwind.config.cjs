@@ -112,5 +112,8 @@ module.exports = {
       }),
     },
   },
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("@codaworks/react-glow/tailwind"),
+  ],
 };
