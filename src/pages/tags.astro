@@ -43,21 +43,30 @@ function uniqueMask(value: any, index: number, array: Array<string>) {
 }
 
 const uniquePostTags = allPostTags.filter(uniqueMask);
-console.log(uniquePostTags);
 ---
 
 <PageLayout>
   <PageMeta title={`Blog | ${SITE_TITLE}`} slot="meta" />
   <section slot="main">
-    <div class="flex justify-evenly">
+    <h1 class="mb-2">
+      <span class="heading text-3xl font-bold">Tags:</span>
+    </h1>
+    <div class="flex justify-normal">
       {
-        uniquePostTags.map((tag) => {
-          return (
-            <div class="text-center flex-auto m-5 p-4 w-14 h-14 rounded-lg bg-blue-300 dark:bg-blue-800">
-              {tag}
-            </div>
-          );
-        })
+        uniquePostTags.map((tag) => (
+          <li class="inline-block my-4 mx-4 underline-offset-8">
+            <a
+              class="flex-auto unset
+                transition-[background-size] duration-300 
+                bg-gradient-to-r bg-left-bottom bg-no-repeat
+                bg-[length:0%_55%] hover:bg-[length:100%_55%] dark:bg-[length:0%_2px] hover:dark:bg-[length:100%_2px]
+                from-primary-blue to-primary-blue dark:from-primary-blue dark:to-primary-blue text-lg"
+              href={`/tags/${tag}`}
+            >
+              {`#${tag}`}
+            </a>
+          </li>
+        ))
       }
     </div>
   </section>

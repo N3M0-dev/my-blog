@@ -73,7 +73,7 @@ const sortedPosts = posts
                 </time>
               </div>
 
-              {typeof post.frontmatter.tags === "undefined" ? undefined : (
+              {post.frontmatter.tags === undefined ? undefined : (
                 <p class="col-span-2 break-words line-clamp-2 hyphens-auto">
                   <span class="fa fa-solid fa-tag text-text-muted" />
                   {Object.keys(post.frontmatter.tags)
