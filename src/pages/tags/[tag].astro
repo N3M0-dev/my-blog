@@ -1,74 +1,51 @@
 ---
 import { readAll } from "../../lib/markdoc/read";
 import { blog } from "../../lib/markdoc/frontmatter.schema";
-import { SITE_URL, SITE_TITLE } from "../../config";
-import { array } from "zod";
+import { SITE_TITLE } from "../../config";
 import PageLayout from "../../layouts/PageLayout.astro";
 import PageMeta from "../../components/PageMeta.astro";
 
 const posts = await readAll({
-    directory: "blog",
-    frontmatterSchema: blog,
+  directory: "blog",
+  frontmatterSchema: blog,
 });
 
 const filteredPosts = posts
+  .filter((p) => p.frontmatter.draft !== true)
+  .filter(({ frontmatter }) => frontmatter.tags !== undefined);
+
+export async function getStaticPaths() {
+  const posts = await readAll({
+    directory: "blog",
+    frontmatterSchema: blog,
+  });
+  const filteredPosts = posts
     .filter((p) => p.frontmatter.draft !== true)
     .filter(({ frontmatter }) => frontmatter.tags !== undefined);
 
-var allPostTags: Array<string> = [];
+  const allPostTags = filteredPosts.flatMap((post) => post.frontmatter.tags ?? []);
 
-filteredPosts.map((post) => {
-    const posttags: Array<string> = post.frontmatter.tags;
-    allPostTags.push(...posttags);
-});
-
-function uniqueMask(value: any, index: number, array: Array<string>) {
+  function uniqueMask(value: any, index: number, array: Array<string>) {
     return array.indexOf(value) === index;
-}
+  }
 
-const uniquePostTags = allPostTags.filter(uniqueMask);
-
-export async function getStaticPaths() {
-    const posts = await readAll({
-        directory: "blog",
-        frontmatterSchema: blog,
-    });
-
-    const filteredPosts = posts
-        .filter((p) => p.frontmatter.draft !== true)
-        .filter(({ frontmatter }) => frontmatter.tags !== undefined);
-
-    var allPostTags: Array<string> = [];
-
-    filteredPosts.map((post) => {
-        const posttags: Array<string> = post.frontmatter.tags;
-        allPostTags.push(...posttags);
-    });
-
-    function uniqueMask(value: any, index: number, array: Array<string>) {
-        return array.indexOf(value) === index;
-    }
-
-    const uniquePostTags = allPostTags.filter(uniqueMask);
-    return uniquePostTags.map((tag) => {
-        return { params: { tag: tag } };
-    });
+  return allPostTags.filter(uniqueMask).map((tag) => {
+    return { params: { tag: tag } };
+  });
 }
 
 function postWithTag(tag: string) {
-    return filteredPosts
-        .sort(
-            (a, b) =>
-                new Date(b.frontmatter.date).valueOf() -
-                new Date(a.frontmatter.date).valueOf()
-        )
-        .filter(({ frontmatter }) => {
-            return (
-                frontmatter.tags?.find((t) => {
-                    return t == tag;
-                }) !== undefined
-            );
-        });
+  return filteredPosts
+    .sort(
+      (a, b) =>
+        new Date(b.frontmatter.date).valueOf() -
+        new Date(a.frontmatter.date).valueOf()
+    )
+    .filter(({ frontmatter }) => {
+      return (
+        frontmatter.tags?.includes(tag)
+      );
+    });
 }
 
 const { tag } = Astro.params;
@@ -133,7 +110,7 @@ const { tag } = Astro.params;
                         <span class="fa fa-solid fa-tag text-text-muted" />
                         {Object.keys(post.frontmatter.tags)
                           .map((k) => {
-                            return post.frontmatter.tags[k];
+                            return post.frontmatter.tags?.[k as keyof typeof post.frontmatter.tags] ?? [];
                           })
                           .join(", ")}
                       </p>
