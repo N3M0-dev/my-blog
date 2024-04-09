@@ -2,12 +2,14 @@
 import PageMeta from "../components/PageMeta.astro";
 import PageLayout from "../layouts/PageLayout.astro";
 import Intro from "../components/Intro.astro";
+import Todo from "src/components/Todo.astro";
 import { SITE_TITLE } from "../config";
 ---
 
 <PageLayout>
-  <PageMeta title={`${SITE_TITLE} | March Towards Infinitys`} slot="meta" />
+  <PageMeta title={`${SITE_TITLE} | March Towards Infinity`} slot="meta" />
   <Fragment slot="main">
+    
     <Intro />
     <!-- <AboutTheTheme /> -->
     <p>
@@ -15,5 +17,6 @@ import { SITE_TITLE } from "../config";
       Currently, I work on HPC stuff and some random things and I really have not much time to work on this introduction. 
       I'll try to keep this blog updated and provide more functionalities of the website, when I'm free <s>(who knows when lol)</s>.
     </p>
+    <Todo />
   </Fragment>
 </PageLayout>
