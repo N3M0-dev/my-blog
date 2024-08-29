@@ -46,7 +46,7 @@ In addition, accesses to atomic objects may establish inter-thread synchronizati
 
 ## The Cpp memory model
 
-For those who may not be familiar with the *computer organization*, a memory model is how the programming language interacts with the virtual memory in the language's abstract machine, regardless of what actually happens on the hardwares like DRAM, CPU and etc. In C++, the memory model can be described as follows:{%sup%}[[2]](https://en.cppreference.com/w/cpp/language/memory_model){%/sup%}:
+For those who may not be familiar with the *computer organization*, a memory model is how the programming language interacts with the virtual memory in the language's abstract machine, regardless of what actually happens on the hardwares like DRAM, CPU and etc. In C++, the memory model can be described as follows{%sup%}[[2]](https://en.cppreference.com/w/cpp/language/memory_model){%/sup%}:
 
 1. Byte:
 
