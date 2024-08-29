@@ -1,4 +1,47 @@
 ---
+import { MarkdocRenderer } from "astro-markdoc-renderer";
+import type { Content } from "astro-markdoc-renderer";
+import YouTubeEmbed from "./YouTubeEmbed.astro";
+import TweetEmbed from "./TweetEmbed.astro";
+import CodePenEmbed from "./CodePenEmbed.astro";
+import GitHubGistEmbed from "./GitHubGistEmbed.astro";
+import CodeBlock from "./CodeBlock.astro";
+import Heading from "./Heading.astro";
+import { noneSchema } from "src/lib/markdoc/frontmatter.schema";
+import { readOne } from "src/lib/markdoc/read";
+
+const { content, frontmatter } = await readOne({
+  directory: "intro",
+  slug: "intro",
+  frontmatterSchema: noneSchema,
+});
+
+const components = {
+  Heading: {
+    Component: Heading,
+    props: {},
+  },
+  CodeBlock: {
+    Component: CodeBlock,
+    props: {},
+  },
+  YouTubeEmbed: {
+    Component: YouTubeEmbed,
+    props: {},
+  },
+  TweetEmbed: {
+    Component: TweetEmbed,
+    props: {},
+  },
+  CodePenEmbed: {
+    Component: CodePenEmbed,
+    props: {},
+  },
+  GitHubGistEmbed: {
+    Component: GitHubGistEmbed,
+    props: {},
+  },
+};
 ---
 
 <section class="mb-8">
@@ -15,27 +58,8 @@
     </h1>
     <p class="text-2xl pb-4 space-y-0">Blog of N3M0</p>
   </div>
-  <div>
-    <p class="mb-5"></p>
-  </div>
-
-  <!-- <script>
-    const words = ["......"];
-    let i = 0;
-    let j = 0;
-    let currentWord = "";
-    let isDeleting = false;
-
-    function type() {
-      currentWord = words[i];
-
-      document.getElementById("typewriter").textContent =
-        "March Towards Infinity" + currentWord.substring(0, j);
-        j++;
-      if(j<=6)
-        setTimeout(type, 200);
-    }
-
-
-  </script> -->
 </section>
+
+<div class="text-justify blog-post prose max-w-none prose-bubblegum">
+  <MarkdocRenderer content={content} components={components} />
+</div>

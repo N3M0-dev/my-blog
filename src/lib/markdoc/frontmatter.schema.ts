@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const noneSchema = z.object({});
+
 const baseSchema = z.object({
   draft: z.boolean().default(false),
   featured: z.boolean().default(false),
