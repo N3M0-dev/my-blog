@@ -78,7 +78,7 @@ const sortedPosts = posts
                   <span class="fa fa-solid fa-tag text-text-muted" />
                   {Object.keys(post.frontmatter.tags)
                     .map((k) => {
-                      return post.frontmatter.tags[k];
+                      return post.frontmatter.tags?.[k as unknown as number] ?? {};
                     })
                     .join(", ")}
                 </p>
